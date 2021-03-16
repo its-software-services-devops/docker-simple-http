@@ -68,6 +68,7 @@ jobs:
     - name: Build and push images
       uses: docker/build-push-action@v2
       with:
+        file: simple-http/Dockerfile
         push: true
         load: false
         tags: ${{ steps.prep.outputs.gcr_tags }}
