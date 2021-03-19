@@ -213,7 +213,7 @@ namespace simple_http
                 //Unix
                 cmd = "bq";
             }
-            string arg = String.Format("load --autodetect --source_format=NEWLINE_DELIMITED_JSON {0} {1}", "istio_upstream_error_stat.tcp_connection_stat", fname);
+            string arg = String.Format("load --project_id gcp-dmp-devops --autodetect --source_format=NEWLINE_DELIMITED_JSON {0} {1}", "istio_upstream_error_stat.tcp_connection_stat", fname);
             using(System.Diagnostics.Process pProcess = new System.Diagnostics.Process())
             {
                 pProcess.StartInfo.FileName = cmd;
