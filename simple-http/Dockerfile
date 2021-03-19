@@ -4,15 +4,16 @@ WORKDIR /source
 
 # copy csproj and restore as distinct layers
 COPY simple-http/*.csproj .
-RUN dotnet restore -r linux-musl-x64
+RUN dotnet restore 
 
 # copy and publish app and libraries
 COPY simple-http/ .
-RUN dotnet publish -c release -o /app -r linux-musl-x64 --no-restore /p:PublishTrimmed=true /p:TrimMode=Link
+RUN dotnet publish -c release -o /app --no-restore 
 
 # final stage/image
 FROM mcr.microsoft.com/dotnet/runtime:5.0
 
+RUN ls -alrt
 RUN apt-get -y update
 RUN apt-get -y install curl
 RUN apt-get -y install gnupg2
