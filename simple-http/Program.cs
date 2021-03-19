@@ -96,7 +96,19 @@ namespace simple_http
 
         private static int Main(string[] args)
         {
-            //var content = Content.From(Resource.FromString("Hello World!"));
+            string msecStr = Environment.GetEnvironmentVariable("DELAY_TO_START_SEC");
+            if (msecStr == null)
+            {
+                msecStr = "0";
+            }
+
+            Console.WriteLine("Program started with DELAY_TO_START_SEC=[{0}] second(s)", msecStr);
+            int msec = Int32.Parse(msecStr) * 1000;
+            if (msec > 0)
+            {
+                Thread.Sleep(msec);
+            }
+            Console.WriteLine("Started HTTP event loop", msecStr);
 
             t1.Start();
 
