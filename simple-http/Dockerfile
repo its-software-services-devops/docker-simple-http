@@ -13,6 +13,9 @@ RUN dotnet publish -c release -o /app --no-restore
 # final stage/image
 FROM mcr.microsoft.com/dotnet/runtime:5.0
 
+RUN mkdir -p /data && chmod 777 /data
+ENV HOME /data
+
 RUN ls -alrt
 RUN apt-get -y update
 RUN apt-get -y install curl
