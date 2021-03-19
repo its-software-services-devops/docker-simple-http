@@ -16,6 +16,7 @@ namespace simple_http
 {    
     class Program
     {
+        private static bool isGcpAuthen = false;
 
         public class CustomHandler : IHandler
         {
@@ -191,20 +192,24 @@ namespace simple_http
             string keyFile = Environment.GetEnvironmentVariable("GCP_KEY_FILE_PATH");
             if (keyFile != null)
             {
-                string gcloudArg = String.Format("auth activate-service-account --key-file={0}", keyFile);
-                using(System.Diagnostics.Process pProcess = new System.Diagnostics.Process())
+                if (!isGcpAuthen)
                 {
-                    pProcess.StartInfo.FileName = "gcloud";
-                    pProcess.StartInfo.Arguments = gcloudArg;
-                    pProcess.StartInfo.UseShellExecute = true;
-                    pProcess.StartInfo.RedirectStandardOutput = false;
-                    pProcess.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                    pProcess.StartInfo.CreateNoWindow = true; //not diplay a windows
-                    pProcess.Start();
-                    pProcess.WaitForExit();
-                }
+                    string gcloudArg = String.Format("auth activate-service-account --key-file={0}", keyFile);
+                    using(System.Diagnostics.Process pProcess = new System.Diagnostics.Process())
+                    {
+                        pProcess.StartInfo.FileName = "gcloud";
+                        pProcess.StartInfo.Arguments = gcloudArg;
+                        pProcess.StartInfo.UseShellExecute = true;
+                        pProcess.StartInfo.RedirectStandardOutput = false;
+                        pProcess.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                        pProcess.StartInfo.CreateNoWindow = true; //not diplay a windows
+                        pProcess.Start();
+                        pProcess.WaitForExit();
+                    }
 
-                Console.WriteLine("Authenticated to GCloud using key file [{0}]", keyFile);   
+                    Console.WriteLine("Authenticated to GCloud using key file [{0}]", keyFile);
+                    isGcpAuthen = true;
+                }
             }
             
             string cmd = "bq.cmd";
@@ -213,7 +218,7 @@ namespace simple_http
                 //Unix
                 cmd = "bq";
             }
-            string arg = String.Format("load --autodetect --source_format=NEWLINE_DELIMITED_JSON {0} {1}", "istio_upstream_error_stat.tcp_connection_stat", fname);
+            string arg = String.Format("load --headless=true --project_id=gcp-dmp-devops --autodetect --source_format=NEWLINE_DELIMITED_JSON {0} {1}", "istio_upstream_error_stat.tcp_connection_stat", fname);
             using(System.Diagnostics.Process pProcess = new System.Diagnostics.Process())
             {
                 pProcess.StartInfo.FileName = cmd;
