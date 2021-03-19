@@ -102,14 +102,20 @@ namespace simple_http
             string redisIP = Environment.GetEnvironmentVariable("REDIS_IP");
             string redisPort = Environment.GetEnvironmentVariable("REDIS_PORT");
             string hostName = Environment.GetEnvironmentVariable("HOSTNAME");
-            
+            string workerIP = Environment.GetEnvironmentVariable("INSTANCE_IP");            
+
             if ((redisIP == null) || (redisPort == null))
             {
                 Console.WriteLine("Env REDIS_IP and REDIS_PORT are required!!!");
                 return;
             }
 
-            string jsonTemplate = "'dtm':'{0}Z', 'host':'{1}', 'success':'{2}', 'ip':'{3}', 'port':'{4}', 'errorMsg':'{5}'";
+            if (workerIP == null)
+            {
+                workerIP = "N/A";
+            }
+
+            string jsonTemplate = "'dtm':'{0}Z', 'host':'{1}', 'success':'{2}', 'ip':'{3}', 'port':'{4}', 'worker':'{5}', 'errorMsg':'{6}'";
             var arr = new List<string>();
 
             int cnt = 0;
@@ -141,6 +147,7 @@ namespace simple_http
                     success,
                     redisIP,
                     redisPort,
+                    workerIP,
                     errMsg);                
                 json = "{" + json + "}";
 
@@ -160,7 +167,15 @@ namespace simple_http
 
         private static void SendStatsToBigQuery(List<string> arr)
         {
+            string os = Environment.GetEnvironmentVariable("OS");
+
             string fname = "connection-stat-to-bq.log";
+            if (os == null)
+            {
+                //Linux
+                fname = "/tmp/connection-stat-to-bq.log";
+            }
+            
             using (FileStream fs = File.Open(fname, FileMode.Create))
             {
                 StreamWriter sw = new StreamWriter(fs);
@@ -191,8 +206,7 @@ namespace simple_http
 
                 Console.WriteLine("Authenticated to GCloud using key file [{0}]", keyFile);   
             }
-
-            string os = Environment.GetEnvironmentVariable("OS");
+            
             string cmd = "bq.cmd";
             if (os == null)
             {
