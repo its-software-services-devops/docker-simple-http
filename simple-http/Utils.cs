@@ -9,6 +9,7 @@ namespace simple_http
         public static void SendStatsToBigQuery(List<string> arr, string fileName)
         {
             string os = Environment.GetEnvironmentVariable("OS");
+            string table = Environment.GetEnvironmentVariable("TCP_CHECK_TABLE");
 
             string fname = fileName;
             if (os == null)
@@ -35,7 +36,7 @@ namespace simple_http
                 //Unix
                 cmd = "bq";
             }
-            string arg = String.Format("load --headless=true --project_id=gcp-dmp-devops --autodetect --source_format=NEWLINE_DELIMITED_JSON {0} {1}", "istio_upstream_error_stat.tcp_connect_stat", fname);
+            string arg = String.Format("load --headless=true --project_id=gcp-dmp-devops --autodetect --source_format=NEWLINE_DELIMITED_JSON {0} {1}", table, fname);
             using(System.Diagnostics.Process pProcess = new System.Diagnostics.Process())
             {
                 pProcess.StartInfo.FileName = cmd;

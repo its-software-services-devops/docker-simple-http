@@ -6,5 +6,6 @@ export GCP_KEY_FILE_PATH=/c/Users/Seubpong.mon/Downloads/gcp-dmp-devops-aef03efe
 
 export CONFIG_FILE=config.cfg
 export TCP_CHECK_BQ_SIZE=10
+export TCP_CHECK_TABLE=istio_upstream_error_stat.tcp_connect_stat
 
 dotnet run
