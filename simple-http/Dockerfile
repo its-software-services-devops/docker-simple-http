@@ -1,4 +1,5 @@
-FROM mcr.microsoft.com/dotnet/sdk:5.0-alpine AS build
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+
 WORKDIR /source
 
 # copy csproj and restore as distinct layers
@@ -10,7 +11,20 @@ COPY simple-http/ .
 RUN dotnet publish -c release -o /app -r linux-musl-x64 --no-restore /p:PublishTrimmed=true /p:TrimMode=Link
 
 # final stage/image
-FROM mcr.microsoft.com/dotnet/runtime-deps:5.0-alpine-amd64
+FROM mcr.microsoft.com/dotnet/runtime:5.0
+
+RUN apt-get -y update
+RUN apt-get -y install curl
+RUN apt-get -y install gnupg2
+
+RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
+ curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg  add - && \
+ apt-get update -y && \
+ apt-get install google-cloud-sdk -y
+
+RUN gcloud version
+RUN gsutil version
+
 WORKDIR /app
 COPY --from=build /app .
 
