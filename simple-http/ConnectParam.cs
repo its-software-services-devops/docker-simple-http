@@ -9,6 +9,8 @@ namespace simple_http
         public string Url { get; set; }
         public string Keyword { get; set; }
         public string BigQueryTable { get; set; }
+        public string RedisDbName { get; set; }
+        public string PasswordEnvVar { get; set; }
 
         public ConnectParam(string ip, int port, string keyword, string table)
         {
@@ -23,6 +25,10 @@ namespace simple_http
             Url = url;
             Keyword = keyword;
             BigQueryTable = table;
-        }        
+        }
+
+        public ConnectParam()
+        {            
+        }    
     }
 }
