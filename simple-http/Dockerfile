@@ -14,7 +14,7 @@ RUN dotnet publish -c release -o /app --no-restore
 FROM mcr.microsoft.com/dotnet/runtime:5.0
 
 RUN mkdir -p /data && chmod 777 /data
-ENV HOME /data
+#ENV HOME /data
 
 COPY simple-http/config.cfg /data/
 

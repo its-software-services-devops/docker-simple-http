@@ -6,10 +6,9 @@ namespace simple_http
 {    
     public class Utils
     {
-        public static void SendStatsToBigQuery(List<string> arr, string fileName)
+        public static void SendStatsToBigQuery(List<string> arr, string fileName, string table)
         {
             string os = Environment.GetEnvironmentVariable("OS");
-            string table = Environment.GetEnvironmentVariable("TCP_CHECK_TABLE");
 
             string fname = fileName;
             if (os == null)
@@ -49,7 +48,7 @@ namespace simple_http
                 pProcess.WaitForExit();
             }
 
-            Console.WriteLine("Sent file [{0}] to BigQuery", fname);
+            Console.WriteLine("Sent file [{0}] to BigQuery table [{1}]", fname, table);
         }
 
         public static void AuthenToGCP()
