@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="GenHTTP.Core" Version="5.0.0" />
+    <PackageReference Include="StackExchange.Redis" Version="2.2.4" />
   </ItemGroup>
 
 </Project>
