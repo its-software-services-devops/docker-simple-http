@@ -127,25 +127,33 @@ namespace simple_http
             int cnt = 0;
             while (true)
             {
-                HttpResponseMessage result = await client.GetAsync(url);
-                var status = result.StatusCode;
-
                 int success = 0;
-                if (status.ToString().Equals("OK"))
-                {
-                    success = 1;
-                }
-                
-                
                 string output = "";
-                using (HttpContent content = result.Content)
+                System.Net.HttpStatusCode status = System.Net.HttpStatusCode.Unused;
+
+                try
                 {
-                    string txtContent = await content.ReadAsStringAsync();
-                    output = txtContent;
-                    if (txtContent != null && txtContent.Length >= 50)
+                    HttpResponseMessage result = await client.GetAsync(url);
+                    status = result.StatusCode;
+                    
+                    if (status.ToString().Equals("OK"))
                     {
-                        output = txtContent.Substring(0, 50);
+                        success = 1;
                     }
+
+                    using (HttpContent content = result.Content)
+                    {
+                        string txtContent = await content.ReadAsStringAsync();
+                        output = txtContent;
+                        if (txtContent != null && txtContent.Length >= 50)
+                        {
+                            output = txtContent.Substring(0, 50);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    output = e.Message.Substring(0, 50);
                 }
 
                 string dtm = DateTime.UtcNow.ToString("s");
