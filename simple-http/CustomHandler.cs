@@ -11,6 +11,8 @@ namespace simple_http
 {
     public class CustomHandler : IHandler
     {
+        private string message = "Hello World #1 !!!";
+
         public IHandler Parent { get; }
         public CustomHandler(IHandler parent)
         {
@@ -31,7 +33,7 @@ namespace simple_http
             }
             else
             {
-                req = req.Content("Hello World!");
+                req = req.Content(message);
             }
             var response = req.Build();
             return new ValueTask<IResponse>(response);

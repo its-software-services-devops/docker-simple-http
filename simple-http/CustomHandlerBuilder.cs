@@ -1,11 +1,5 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Collections.Generic;
-
-using GenHTTP.Modules.IO;
 using GenHTTP.Api.Content;
-using GenHTTP.Api.Protocol;
 
 namespace simple_http
 {
@@ -17,6 +11,7 @@ namespace simple_http
             _Concerns.Add(concern);
             return this;
         }
+        
         public IHandler Build(IHandler parent)
         {
             return Concerns.Chain(parent, _Concerns, (p) => new CustomHandler(p));
