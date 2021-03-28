@@ -47,6 +47,7 @@ jobs:
 
         echo ::set-output name=tags::${TAGS}
         echo ::set-output name=gcr_tags::${GCR_TAGS}
+        echo ::set-output name=cloudrun_service::hello-demo-dev
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v1
     
@@ -81,15 +82,7 @@ jobs:
     # Deploy image to Cloud Run
     - name: Deploy
       run: |
-          gcloud run deploy $SERVICE_NAME \
+          gcloud run deploy ${{ steps.prep.outputs.cloudrun_service }} \
             --region $RUN_REGION \
             --image gcr.io/$DEPLOY_PROJECT_ID/${{ steps.prep.outputs.gcr_tags }} \
             --platform managed
-
-  deploy:
-
-    runs-on: ubuntu-latest
-
-    steps:
-
-   
