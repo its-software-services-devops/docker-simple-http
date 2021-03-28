@@ -7,6 +7,8 @@ on:
 
 env:
   ENV_GCR_IMAGE: gcr.io/its-artifact-commons/simple-http
+  DEPLOY_PROJECT_ID: ${{ secrets.CLOUDRUN_PROJECT_ID }}
+  RUN_REGION: asia-southeast1
 
 jobs:
 
@@ -70,3 +72,28 @@ jobs:
         push: true
         load: false
         tags: ${{ steps.prep.outputs.gcr_tags }}
+
+  deploy:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    # Setup gcloud CLI
+    - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      with:
+        version: '275.0.0'
+        service_account_email: ${{ secrets.GCR_EMAIL }}
+        service_account_key: ${{ secrets.GCR_KEY}}
+
+    # Configure gcloud CLI
+    - name: gcloud Set up
+      run: |
+          gcloud config set project $DEPLOY_PROJECT_ID
+
+    # Deploy image to Cloud Run
+    #- name: Deploy
+    #  run: |
+    #      gcloud run deploy $SERVICE_NAME \
+    #        --region $RUN_REGION \
+    #        --image gcr.io/$DEPLOY_PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA \
+    #        --platform managed          
