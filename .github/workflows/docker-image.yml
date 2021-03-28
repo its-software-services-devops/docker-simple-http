@@ -84,5 +84,5 @@ jobs:
       run: |
           gcloud run deploy ${{ steps.prep.outputs.cloudrun_service }} \
             --region $RUN_REGION \
-            --image gcr.io/$DEPLOY_PROJECT_ID/${{ steps.prep.outputs.gcr_tags }} \
+            --image ${{ steps.prep.outputs.gcr_tags }} \
             --platform managed
