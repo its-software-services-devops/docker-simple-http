@@ -7,10 +7,12 @@ on:
 
 env:
   ENV_GCR_IMAGE: gcr.io/its-artifact-commons/simple-http
+  DEPLOY_PROJECT_ID: ${{ secrets.CLOUDRUN_PROJECT_ID }}
+  RUN_REGION: asia-southeast1
 
 jobs:
 
-  build:
+  build-and-deploy:
 
     runs-on: ubuntu-latest
 
@@ -25,11 +27,18 @@ jobs:
         GCR_IMAGE=$ENV_GCR_IMAGE
         VERSION=latest
         GIT_HASH=$(git rev-parse --short "$GITHUB_SHA")
+        SERVICE_NAME=hello-demo-dev
 
         if [[ $GITHUB_REF == refs/tags/* ]]; then
           VERSION=${GITHUB_REF#refs/tags/}
+          SERVICE_NAME=hello-demo-prod
         elif [[ $GITHUB_REF == refs/heads/* ]]; then
-          VERSION=$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')-$GIT_HASH
+          BRANCH=$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
+          VERSION=$BRANCH-$GIT_HASH
+
+          if [[ $BRANCH == 'main' ]]; then
+            SERVICE_NAME=hello-demo-test
+          fi
         fi
 
         TAGS="${DOCKER_IMAGE}:${VERSION}"
@@ -45,6 +54,7 @@ jobs:
 
         echo ::set-output name=tags::${TAGS}
         echo ::set-output name=gcr_tags::${GCR_TAGS}
+        echo ::set-output name=cloudrun_service::${SERVICE_NAME}
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v1
     
@@ -52,7 +62,7 @@ jobs:
       uses: docker/setup-buildx-action@v1
 
     - name: Activate GCP service account
-      uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      uses: google-github-actions/github-actions/setup-gcloud@master
       with:
         service_account_email: ${{ secrets.GCR_EMAIL }}
         service_account_key: ${{ secrets.GCR_KEY }}
@@ -70,3 +80,16 @@ jobs:
         push: true
         load: false
         tags: ${{ steps.prep.outputs.gcr_tags }}
+
+    # Configure gcloud CLI
+    - name: gcloud Set up
+      run: |
+          gcloud config set project $DEPLOY_PROJECT_ID
+    
+    # Deploy image to Cloud Run
+    - name: Deploy
+      run: |
+          gcloud run deploy ${{ steps.prep.outputs.cloudrun_service }} \
+            --region $RUN_REGION \
+            --image ${{ steps.prep.outputs.gcr_tags }} \
+            --platform managed
