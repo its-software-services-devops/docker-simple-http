@@ -10,6 +10,7 @@ env:
   DEPLOY_PROJECT_ID: ${{ secrets.CLOUDRUN_PROJECT_ID }}
   RUN_REGION: asia-southeast1
   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
 
