@@ -9,6 +9,7 @@ env:
   ENV_GCR_IMAGE: gcr.io/its-artifact-commons/simple-http
   DEPLOY_PROJECT_ID: ${{ secrets.CLOUDRUN_PROJECT_ID }}
   RUN_REGION: asia-southeast1
+  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
 jobs:
 
@@ -60,7 +61,7 @@ jobs:
       uses: highbyte/sonarscan-dotnet@2.0
       with:
         # The key of the SonarQube project
-        sonarProjectKey: ${{ secrets.SONAR_TOKEN }}
+        sonarProjectKey: its-software-services-devops_docker-simple-http
         # The name of the SonarQube project
         sonarProjectName:  docker-simple-http
         # The name of the SonarQube organization in SonarCloud. For hosted SonarQube, skip this setting.
