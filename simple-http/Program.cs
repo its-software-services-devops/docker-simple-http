@@ -7,7 +7,7 @@ namespace simple_http
     {
         private static int Main(string[] args)
         {
-            Console.WriteLine("Started HTTP event loop");
+            Console.WriteLine("Started HTTP event loop - xxxx,yyyy.zzzz");
 
             return Host.Create()
                        .Console()
