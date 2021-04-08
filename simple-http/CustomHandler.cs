@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.Collections;
 
 using GenHTTP.Modules.IO;
 using GenHTTP.Api.Content;
@@ -12,7 +11,7 @@ namespace simple_http
 {
     public class CustomHandler : IHandler
     {
-        private string message = "Hello World #2.1 !!!";
+        private string message = "Hello World #2.2 !!!";
 
         public IHandler Parent { get; }
         public CustomHandler(IHandler parent)
