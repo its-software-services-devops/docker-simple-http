@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<coverage line-rate="0.22640000000000002" branch-rate="0.3333" version="1.9" timestamp="1616980277" lines-covered="12" lines-valid="53" branches-covered="2" branches-valid="6">
+<coverage line-rate="0.22640000000000002" branch-rate="0.3333" version="1.9" timestamp="1617848461" lines-covered="12" lines-valid="53" branches-covered="2" branches-valid="6">
   <sources>
     <source>D:\dev\projects\workspace-its\docker-simple-http\simple-http\</source>
   </sources>
