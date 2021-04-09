@@ -11,7 +11,7 @@ namespace simple_http
 {
     public class CustomHandler : IHandler
     {
-        private string message = "Hello World #2.3 !!!";
+        private string message = "Hello World #2.4 !!!";
 
         public IHandler Parent { get; }
         public CustomHandler(IHandler parent)
