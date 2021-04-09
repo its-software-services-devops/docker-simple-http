@@ -1,6 +1,6 @@
 namespace simple_http
 {
-    public class SomeCalculations
+    public static class SomeCalculations
     {
         public static int DoAdd(int a, int b)
         {
