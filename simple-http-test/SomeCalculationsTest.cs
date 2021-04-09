@@ -49,6 +49,7 @@ namespace simple_http
             int expected = 0;
             int calculatedResult = SomeCalculations.DoMod(a, b);
             Assert.Equal(expected, calculatedResult);
-        }                             
+        }  
+                                   
     }     
 }
